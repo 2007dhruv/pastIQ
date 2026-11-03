@@ -175,15 +175,6 @@ Every monument dossier in **pastIQ** is cross-referenced with primary historical
 
 ---
 
-## 🏆 Hackathon Details
-
-- **Event:** Blithchron '27
-- **Institution:** Indian Institute of Technology Gandhinagar (IITGN)
-- **Team:** pastIQ Initiative
-- **Lead Developer:** [Dhruv Gohel](https://github.com/2007dhruv)
-
----
-
 ## 📜 License & Acknowledgments
 
 - **pastIQ Platform, AI Agents & Editorial UX:** Licensed under the [MIT License](LICENSE).
