@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>pastIQ — 3D Heritage of India</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Rozha+One&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+
+<div class="app">
+  <aside class="side">
+    <header class="masthead">
+      <div style="margin-bottom: 8px;"><a href="home.html" style="color: #ffbe3b; text-decoration: none; font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">&#8592; Gallery Home</a></div>
+      <h1>pastIQ</h1>
+      <button class="btn theme-btn" id="theme" type="button" aria-pressed="false">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.8 5.8 0 1 0 7.1 7.1z"/></svg>
+        <span class="label">Night</span>
+      </button>
+      <p class="hi" lang="hi">भारत के स्मारक</p>
+      <p class="sub" id="sub">Landmarks modelled in 3D at their real proportions. Pick one on the map or from the list, then drag to walk around it.</p>
+    </header>
+    <div class="search">
+      <label class="visually-hidden" for="q">Search monuments</label>
+      <input id="q" type="search" autocomplete="off" spellcheck="false">
+      <p class="q-empty" id="q-empty" hidden>No monument matches that search.</p>
+    </div>
+    <ul class="list" id="list"></ul>
+  </aside>
+
+  <main class="stage is-map" id="stage">
+    <canvas id="scene" aria-label="3D model of the selected monument"></canvas>
+    <div class="mapview" id="mapview"></div>
+    <div class="status" id="status">Loading the 3D engine…</div>
+
+    <div class="toolbar">
+      <button class="btn" id="to-map" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 3.5 5.5 2l5 1.5 4-1.5v10.5l-4 1.5-5-1.5-4 1.5zM5.5 2v10.5M10.5 3.5V14"/></svg>
+        <span class="label">Map</span>
+      </button>
+      <button class="btn" id="prev" type="button" aria-label="Previous monument">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3 5 8l5 5"/></svg>
+      </button>
+      <button class="btn" id="next" type="button" aria-label="Next monument">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 5 5-5 5"/></svg>
+      </button>
+      <button class="btn" id="rotate" type="button" aria-pressed="true">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.8-4.1"/><path d="M12 1.5v2.8H9.2"/></svg>
+        <span class="label">Auto-rotate</span>
+      </button>
+      <button class="btn" id="reset" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6V2h4M14 6V2h-4M2 10v4h4M14 10v4h-4"/></svg>
+        <span class="label">Reset view</span>
+      </button>
+    </div>
+
+    <section class="plaque" id="plaque" aria-live="polite">
+      <div class="p-head">
+        <p class="eyebrow" id="p-place"></p>
+        <h2 id="p-name"></h2>
+        <p class="local" id="p-local"></p>
+        <button class="p-toggle" id="p-toggle" type="button" aria-expanded="false" aria-controls="p-more">
+          <span class="visually-hidden">Show details</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 5-5 5 5"/></svg>
+        </button>
+      </div>
+      <div class="p-more" id="p-more">
+        <dl class="stats">
+          <div><dt id="p-stat-label">Height</dt><dd id="p-stat"></dd></div>
+          <div><dt>Built</dt><dd id="p-built"></dd></div>
+          <div><dt>Style</dt><dd id="p-style"></dd></div>
+        </dl>
+        <details class="facts" id="p-facts-wrap" open>
+          <summary id="p-material"></summary>
+          <ul id="p-facts"></ul>
+        </details>
+      </div>
+    </section>
+    <p class="hint">Drag to orbit · scroll or pinch to zoom · ← → to switch</p>
+  </main>
+</div>
+
+
+<script>
+  window.addEventListener('error', function (e) {
+    var s = document.getElementById('status');
+    if (s) {
+      s.hidden = false;
+      s.style.color = '#ff4444';
+      s.style.fontWeight = 'bold';
+      s.style.zIndex = '9999';
+      s.style.background = 'rgba(0,0,0,0.85)';
+      s.style.padding = '20px';
+      s.textContent = 'ERROR: ' + (e.message || e.error || 'Failed script load') + ' (' + (e.filename || '') + ':' + (e.lineno || '') + ')';
+    }
+    console.error('Captured window error:', e);
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var s = document.getElementById('status');
+    if (s) {
+      s.hidden = false;
+      s.style.color = '#ffaa00';
+      s.style.fontWeight = 'bold';
+      s.style.zIndex = '9999';
+      s.style.background = 'rgba(0,0,0,0.85)';
+      s.style.padding = '20px';
+      s.textContent = 'PROMISE REJECTION: ' + (e.reason ? (e.reason.message || e.reason) : 'Unknown promise failure');
+    }
+    console.error('Captured unhandled rejection:', e);
+  });
+</script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pastIQ — The Living Archive of Indian Heritage & Spatial Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-base: #090a10;
+    --bg-surface: #12131d;
+    --bg-card: rgba(22, 23, 35, 0.85);
+    --gold: #d4af37;
+    --gold-light: #f3e5ab;
+    --gold-glow: rgba(212, 175, 55, 0.25);
+    --saffron: #e67e22;
+    --sandstone: #c29b61;
+    --text-primary: #f5f5f7;
+    --text-secondary: #9ea0b4;
+    --text-muted: #67697e;
+    --border-subtle: rgba(212, 175, 55, 0.18);
+    --border-card: rgba(255, 255, 255, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    background-image: 
+      radial-gradient(circle at 15% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 85% 70%, rgba(230, 126, 34, 0.04) 0%, transparent 50%);
+  }
+
+  /* Architectural Framing Lines */
+  .arch-frame {
+    position: relative;
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* Top Navigation */
+  header.nav-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    background: rgba(9, 10, 16, 0.88);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 18px 0;
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .brand-insignia {
+    width: 38px;
+    height: 38px;
+    border: 1.5px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(45deg);
+    border-radius: 4px;
+    background: rgba(212, 175, 55, 0.08);
+  }
+
+  .brand-insignia span {
+    transform: rotate(-45deg);
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    color: var(--gold);
+    font-size: 1.1rem;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #fff;
+  }
+  .brand-title span { color: var(--gold); }
+
+  .brand-tagline {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sandstone);
+    font-weight: 600;
+  }
+
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-item a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+  }
+
+  .nav-item a:hover, .nav-item a.active {
+    color: var(--gold-light);
+  }
+
+  .badge-tag {
+    font-size: 0.65rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--gold);
+    margin-left: 4px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  .btn-enter-3d {
+    background: linear-gradient(135deg, var(--gold), #b38b22);
+    color: #0b0c13;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.8px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+  }
+
+  .btn-enter-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4);
+    color: #000;
+  }
+
+  /* Editorial Hero Gallery */
+  section.hero-editorial {
+    padding: 70px 0 60px 0;
+    position: relative;
+  }
+
+  .hero-pretitle {
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-pretitle::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.6rem;
+    line-height: 1.15;
+    font-weight: 700;
+    color: #fff;
+    max-width: 900px;
+    margin-bottom: 16px;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--gold-light);
+    font-weight: 400;
+  }
+
+  .hero-devanagari {
+    font-family: 'Rozha One', serif;
+    font-size: 1.35rem;
+    color: var(--sandstone);
+    margin-bottom: 24px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 720px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  /* Architectural Collage */
+  .gallery-collage-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 240px 240px;
+    gap: 18px;
+    margin-top: 40px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .collage-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #10111a;
+    border: 1px solid var(--border-card);
+    transition: transform 0.35s ease, border-color 0.35s ease;
+    text-decoration: none;
+    display: block;
+  }
+
+  .collage-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--gold);
+  }
+
+  .collage-card.feature-large {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+  }
+
+  .collage-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    filter: brightness(0.85) contrast(1.05);
+  }
+
+  .collage-card:hover .collage-img {
+    transform: scale(1.04);
+    filter: brightness(0.95);
+  }
+
+  .collage-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(9, 10, 16, 0.95) 0%, rgba(9, 10, 16, 0.3) 50%, transparent 100%);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .collage-badge {
+    align-self: flex-start;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .collage-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .feature-large .collage-title {
+    font-size: 2rem;
+  }
+
+  .collage-subtitle {
+    font-size: 0.82rem;
+    color: var(--sandstone);
+    font-weight: 500;
+  }
+
+  /* Stats Ribbon */
+  .stats-ribbon {
+    margin: 50px 0;
+    background: rgba(18, 19, 29, 0.75);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 28px 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    text-align: center;
+  }
+
+  .stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--gold-light);
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* Section Titles */
+  .section-header {
+    text-align: center;
+    margin: 80px 0 36px 0;
+  }
+  .section-tag {
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .section-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+
+  /* 4 Pillars of pastIQ */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  .pillar-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    padding: 30px 24px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .pillar-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  .pillar-icon {
+    font-size: 2rem;
+    margin-bottom: 18px;
+    display: inline-block;
+  }
+  .pillar-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .pillar-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex-grow: 1;
+  }
+  .pillar-link {
+    color: var(--gold);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pillar-link:hover { text-decoration: underline; }
+
+  /* Curated Eras Interactive Tabs */
+  .era-tabs-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .era-tab-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-card);
+    color: var(--text-secondary);
+    padding: 9px 20px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .era-tab-btn:hover {
+    color: #fff;
+    border-color: var(--gold);
+  }
+  .era-tab-btn.active {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
+  /* Live Search Box */
+  .filter-search-bar {
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+    position: relative;
+  }
+  .filter-search-input {
+    width: 100%;
+    background: rgba(18, 19, 29, 0.9);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 14px 20px 14px 46px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .filter-search-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 15px var(--gold-glow);
+  }
+  .search-icon-svg {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--sandstone);
+  }
+
+  /* Monument Cards Grid */
+  .monuments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 26px;
+    margin-bottom: 80px;
+  }
+
+  .monument-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+
+  .monument-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--gold);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+  }
+
+  .monument-thumb-wrap {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: #0f1018;
+  }
+
+  .monument-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .monument-card:hover .monument-thumb {
+    transform: scale(1.05);
+  }
+
+  .card-top-tags {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  .tag-state {
+    background: rgba(9, 10, 16, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .tag-dynasty {
+    background: rgba(212, 175, 55, 0.9);
+    color: #090a10;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .monument-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .monument-name-en {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .monument-name-hi {
+    font-family: 'Rozha One', serif;
+    font-size: 0.95rem;
+    color: var(--sandstone);
+    margin-bottom: 10px;
+  }
+
+  .monument-meta-row {
+    display: flex;
+    gap: 12px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 10px;
+  }
+
+  .monument-blurb {
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 18px;
+    flex-grow: 1;
+  }
+
+  .btn-card-3d {
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-card-3d:hover {
+    background: var(--gold);
+    color: #0b0c13;
+    box-shadow: 0 4px 15px var(--gold-glow);
+  }
+
+  /* Footer */
+  footer.page-footer {
+    border-top: 1px solid var(--border-subtle);
+    background: #06070a;
+    padding: 60px 0 40px 0;
+    margin-top: 60px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 40px;
+  }
+
+  .footer-brand h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .footer-brand p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    max-width: 400px;
+    line-height: 1.6;
+  }
+
+  .footer-col h5 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .footer-links {
+    list-style: none;
+  }
+  .footer-links li { margin-bottom: 10px; }
+  .footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold-light); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 900px) {
+    .hero-headline { font-size: 2.6rem; }
+    .gallery-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .collage-card.feature-large { grid-column: 1 / 2; grid-row: auto; height: 280px; }
+    .collage-card { height: 200px; }
+    .stats-ribbon { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+    .nav-menu { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header Navigation -->
+<header class="nav-header">
+  <div class="arch-frame nav-container">
+    <a href="home.html" class="brand-group">
+      <div class="brand-insignia">
+        <span>IQ</span>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">past<span>IQ</span></div>
+        <div class="brand-tagline">Living Archive of Indian Heritage</div>
+      </div>
+    </a>
+
+    <ul class="nav-menu">
+      <li class="nav-item"><a href="home.html" class="active">Gallery Home</a></li>
+      <li class="nav-item"><a href="index.html">3D Explorer <span class="badge-tag">101 Models</span></a></li>
+      <li class="nav-item"><a href="#eras">Dynasties & Eras</a></li>
+      <li class="nav-item"><a href="#pillars">Platform Pillars</a></li>
+    </ul>
+
+    <div style="display:flex; align-items:center;">
+      <div class="lang-selector-group" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.06); border:1px solid var(--border-subtle); padding:6px 12px; border-radius:8px; margin-right:14px;">
+        <span>🌐</span>
+        <select id="homeLangSelect" style="background:transparent; color:var(--gold-light); border:none; font-family:inherit; font-size:0.85rem; font-weight:600; outline:none; cursor:pointer;">
+          <option value="en">English</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+        </select>
+      </div>
+
+      <a href="index.html" class="btn-enter-3d">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+        Launch 3D Explorer
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Main Container -->
+<main class="arch-frame">
+
+  <!-- Editorial Hero Section -->
+  <section class="hero-editorial">
+    <div class="hero-pretitle">An Architectural Continuum</div>
+    <h1 class="hero-headline">The Living Archive of <em>Indian Architecture</em> & Civilizational Memory.</h1>
+    <div class="hero-devanagari">भारत की 5000 वर्षों की स्थापत्य कला और गौरवशाली इतिहास की डिजिटल यात्रा</div>
+    <p class="hero-description">
+      Experience 101 monumental masterworks from 28 states and union territories. Rendered with mathematical precision in 3D code, contextualized through Indic geospatial intelligence and epigraphic artificial intelligence.
+    </p>
+
+    <!-- Editorial Architectural Collage -->
+    <div class="gallery-collage-grid">
+      <!-- Feature Large: Taj Mahal -->
+      <a href="monument.html?id=taj-mahal" class="collage-card feature-large">
+        <img class="collage-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg" alt="Taj Mahal, Agra">
+        <div class="collage-overlay">
+          <span class="collage-badge">Mughal Dynasty · 1632 CE</span>
+          <h2 class="collage-title">Taj Mahal</h2>
+          <span class="collage-subtitle">Agra, Uttar Pradesh · Indo-Islamic Marble Marvel</span>
+        </div>
+      </a>
+
+      <!-- Rani ki Vav (Gujarat Special for IIT Gandhinagar) -->
+      <a href="monument.html?id=rani-ki-vav" class="collage-card">
+        <img class="collage-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rani_ki_vav_07.jpg/800px-Rani_ki_vav_07.jpg" alt="Rani ki Vav, Patan">
+        <div class="collage-overlay">
+          <span class="collage-badge">Solanki Dynasty · 1063 CE</span>
+          <h3 class="collage-title">Rani ki Vav</h3>
+          <span class="collage-subtitle">Patan, Gujarat · Subterranean Stepwell</span>
+        </div>
+      </a>
+
+      <!-- Konark Sun Temple -->
+      <a href="index.html#konark-sun-temple" class="collage-card">
+        <img class="collage-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_2022.jpg/800px-Konark_Sun_Temple_2022.jpg" alt="Konark Sun Temple">
+        <div class="collage-overlay">
+          <span class="collage-badge">Eastern Ganga · 1250 CE</span>
+          <h3 class="collage-title">Sun Temple</h3>
+          <span class="collage-subtitle">Konark, Odisha · Kalinga Chariot</span>
+        </div>
+      </a>
+
+      <!-- Vittala Temple Hampi -->
+      <a href="index.html#vittala-temple-hampi" class="collage-card">
+        <img class="collage-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Stone_Chariot_Hampi.jpg/800px-Stone_Chariot_Hampi.jpg" alt="Stone Chariot Hampi">
+        <div class="collage-overlay">
+          <span class="collage-badge">Vijayanagara · 15th Century</span>
+          <h3 class="collage-title">Vittala Temple</h3>
+          <span class="collage-subtitle">Hampi, Karnataka · Monolithic Stone Chariot</span>
+        </div>
+      </a>
+
+      <!-- Mehrangarh Fort -->
+      <a href="index.html#mehrangarh-fort" class="collage-card">
+        <img class="collage-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Jodhpur-Mehrangarh_Fort_DSC_3943.jpg/800px-Jodhpur-Mehrangarh_Fort_DSC_3943.jpg" alt="Mehrangarh Fort">
+        <div class="collage-overlay">
+          <span class="collage-badge">Rathore Dynasty · 1459 CE</span>
+          <h3 class="collage-title">Mehrangarh</h3>
+          <span class="collage-subtitle">Jodhpur, Rajasthan · Impregnable Citadel</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Stats Ribbon -->
+    <div class="stats-ribbon">
+      <div class="stat-block">
+        <div class="stat-number">101</div>
+        <div class="stat-label">Procedural 3D Monuments</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">28</div>
+        <div class="stat-label">States & Territories</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">5,000+</div>
+        <div class="stat-label">Years of Civilization</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">&lt; 10 KB</div>
+        <div class="stat-label">Load Size Per Model</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform Pillars -->
+  <section id="pillars">
+    <div class="section-header">
+      <span class="section-tag">Technological Foundations</span>
+      <h2 class="section-heading">Four Pillars of pastIQ</h2>
+      <p class="section-desc">Bridging classical architecture with modern spatial computation and open-source artificial intelligence.</p>
+    </div>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-icon">📐</div>
+        <h3 class="pillar-title">Procedural 3D Engine</h3>
+        <p class="pillar-desc">Constructed from raw mathematical geometry using Three.js WebGL. Zero heavy asset downloads, sub-second rendering, real-world proportions, and dynamic day/night atmospheric lighting.</p>
+        <a href="index.html" class="pillar-link">Open 3D Viewer &rarr;</a>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-icon">🗺️</div>
+        <h3 class="pillar-title">Geospatial Heritage Atlas</h3>
+        <p class="pillar-desc">Interactive Leaflet mapping system with 101 precise geo-coordinates, architectural lineage boundaries, and one-click teleportation between cartography and 3D space.</p>
+        <a href="index.html#map" class="pillar-link">Inspect India Map &rarr;</a>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-icon">📜</div>
+        <h3 class="pillar-title">Epigraphy & OCR Scanner</h3>
+        <p class="pillar-desc">Browser-based machine vision deciphering rock edicts, ASI monument plaques, and stone carvings directly on client devices without costly cloud roundtrips.</p>
+        <span class="pillar-link" style="color:var(--sandstone)">Client-Side Vision</span>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-icon">🤖</div>
+        <h3 class="pillar-title">Indic AI Heritage Guide</h3>
+        <p class="pillar-desc">Groq LPU acceleration running Llama 3.1 70B for instant historical synthesis, architectural discourse, and translations across 10 regional Indian languages.</p>
+        <span class="pillar-link" style="color:var(--sandstone)">Ultra-Low Latency</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curated Journey By Era & Dynasty -->
+  <section id="eras">
+    <div class="section-header">
+      <span class="section-tag">Historical Lineage</span>
+      <h2 class="section-heading">Curated Journey by Era & Dynasty</h2>
+      <p class="section-desc">Explore how India's master builders sculpted rock, terracotta, marble, and sandstone across two millennia.</p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="era-tabs-container">
+      <button class="era-tab-btn active" data-era="all">All Eras (101)</button>
+      <button class="era-tab-btn" data-era="ancient">Ancient & Mauryan (c. 300 BCE – 600 CE)</button>
+      <button class="era-tab-btn" data-era="southern">Classical Southern (Chola, Vijayanagara)</button>
+      <button class="era-tab-btn" data-era="rajput">Rajput & Western (Solanki, Chauhan)</button>
+      <button class="era-tab-btn" data-era="mughal">Indo-Islamic & Mughal (c. 1200 – 1750 CE)</button>
+      <button class="era-tab-btn" data-era="modern">Modern & National (c. 1850 – Present)</button>
+    </div>
+
+    <!-- Live Search -->
+    <div class="filter-search-bar">
+      <svg class="search-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"></circle><line x1="21" y1="21" x2="16.65" y2="16.65" stroke-width="2"></line></svg>
+      <input type="text" id="monumentSearch" class="filter-search-input" placeholder="Search by landmark name, state, dynasty, or style...">
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="monuments-grid" id="monumentsGrid">
+      
+      <!-- 1. Taj Mahal -->
+      <div class="monument-card" data-era="mughal" data-name="Taj Mahal" data-state="Uttar Pradesh">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/800px-Taj_Mahal_%28Edited%29.jpeg" alt="Taj Mahal">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Agra, UP</span>
+            <span class="tag-dynasty">Mughal</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Taj Mahal</h3>
+          <div class="monument-name-hi">ताज महल</div>
+          <div class="monument-meta-row">
+            <span>Built 1632–1653 CE</span>
+            <span>•</span>
+            <span>UNESCO World Heritage</span>
+          </div>
+          <p class="monument-blurb">White Makrana marble mausoleum embodying the pinnacle of Indo-Islamic symmetry, intricate pietre dure floral inlays, and quadripartite Charbagh gardens.</p>
+          <a href="index.html#taj-mahal" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. Rani ki Vav (Gujarat) -->
+      <div class="monument-card" data-era="rajput" data-name="Rani ki Vav" data-state="Gujarat">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rani_ki_vav_07.jpg/800px-Rani_ki_vav_07.jpg" alt="Rani ki Vav">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Patan, Gujarat</span>
+            <span class="tag-dynasty">Solanki Dynasty</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Rani ki Vav</h3>
+          <div class="monument-name-hi">रानी की वाव</div>
+          <div class="monument-meta-row">
+            <span>Built 1063 CE</span>
+            <span>•</span>
+            <span>Maru-Gurjara Style</span>
+          </div>
+          <p class="monument-blurb">Subterranean seven-tiered stepwell built as an inverted temple on the banks of the Saraswati river, decorated with over 500 principal carved deities.</p>
+          <a href="monument.html?id=rani-ki-vav" class="btn-card-3d" style="background:var(--gold); color:#0b0c13;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Open Dossier & 3D Archive
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. Brihadeeswara Temple -->
+      <div class="monument-card" data-era="southern" data-name="Brihadeeswara Temple" data-state="Tamil Nadu">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Brihadisvara_Temple%2C_Thanjavur.jpg/800px-Brihadisvara_Temple%2C_Thanjavur.jpg" alt="Brihadeeswara Temple">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Thanjavur, TN</span>
+            <span class="tag-dynasty">Chola Dynasty</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Brihadeeswara Temple</h3>
+          <div class="monument-name-hi">बृहदीश्वर मन्दिर</div>
+          <div class="monument-meta-row">
+            <span>Built 1010 CE</span>
+            <span>•</span>
+            <span>Dravidian Vimana</span>
+          </div>
+          <p class="monument-blurb">Commissioned by Rajaraja I, this granite titan features a 66-meter towering vimana capped by an 80-tonne monolithic stone cupola without binding mortar.</p>
+          <a href="index.html#brihadeeswara-temple" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. Konark Sun Temple -->
+      <div class="monument-card" data-era="ancient" data-name="Konark Sun Temple" data-state="Odisha">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Konark_Sun_Temple_2022.jpg/800px-Konark_Sun_Temple_2022.jpg" alt="Konark Sun Temple">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Konark, Odisha</span>
+            <span class="tag-dynasty">Eastern Ganga</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Konark Sun Temple</h3>
+          <div class="monument-name-hi">कोणार्क सूर्य मन्दिर</div>
+          <div class="monument-meta-row">
+            <span>Built 1250 CE</span>
+            <span>•</span>
+            <span>Kalinga Architecture</span>
+          </div>
+          <p class="monument-blurb">Conceived as a colossal celestial chariot with 24 intricately carved stone sundial wheels pulled by seven galloping horses towards the rising sun.</p>
+          <a href="index.html#konark-sun-temple" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 5. Vittala Temple, Hampi -->
+      <div class="monument-card" data-era="southern" data-name="Vittala Temple Hampi" data-state="Karnataka">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Stone_Chariot_Hampi.jpg/800px-Stone_Chariot_Hampi.jpg" alt="Stone Chariot Hampi">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Hampi, Karnataka</span>
+            <span class="tag-dynasty">Vijayanagara</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Vittala Temple</h3>
+          <div class="monument-name-hi">विट्ठल मन्दिर, हम्पी</div>
+          <div class="monument-meta-row">
+            <span>15th Century CE</span>
+            <span>•</span>
+            <span>Vijayanagara Style</span>
+          </div>
+          <p class="monument-blurb">Renowned for its iconic monolithic stone chariot dedicated to Garuda and its musical pillars that resonate with distinct acoustic frequencies when tapped.</p>
+          <a href="index.html#vittala-temple-hampi" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 6. Sanchi Stupa -->
+      <div class="monument-card" data-era="ancient" data-name="Sanchi Stupa" data-state="Madhya Pradesh">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Great_Stupa%2C_Sanchi_01.jpg/800px-Great_Stupa%2C_Sanchi_01.jpg" alt="Great Stupa Sanchi">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Sanchi, MP</span>
+            <span class="tag-dynasty">Mauryan Empire</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Great Stupa of Sanchi</h3>
+          <div class="monument-name-hi">सांची का महान स्तूप</div>
+          <div class="monument-meta-row">
+            <span>3rd Century BCE</span>
+            <span>•</span>
+            <span>Buddhist Reliquary</span>
+          </div>
+          <p class="monument-blurb">Commissioned by Emperor Ashoka, the stupa encloses holy relics beneath a hemispherical dome, entered via four elaborately sculpted ornamental Toranas.</p>
+          <a href="index.html#sanchi-stupa" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 7. Mehrangarh Fort -->
+      <div class="monument-card" data-era="rajput" data-name="Mehrangarh Fort" data-state="Rajasthan">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Jodhpur-Mehrangarh_Fort_DSC_3943.jpg/800px-Jodhpur-Mehrangarh_Fort_DSC_3943.jpg" alt="Mehrangarh Fort">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Jodhpur, RJ</span>
+            <span class="tag-dynasty">Rathore Dynasty</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Mehrangarh Fort</h3>
+          <div class="monument-name-hi">मेहरानगढ़ दुर्ग</div>
+          <div class="monument-meta-row">
+            <span>Built 1459 CE</span>
+            <span>•</span>
+            <span>Rajput Military Fortress</span>
+          </div>
+          <p class="monument-blurb">Rising 400 feet above the Blue City upon sheer sandstone precipices, featuring seven colossal gates, intricate filigreed jharokhas, and royal courtyards.</p>
+          <a href="index.html#mehrangarh-fort" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 8. Kailasa Temple Ellora -->
+      <div class="monument-card" data-era="southern" data-name="Kailasa Temple" data-state="Maharashtra">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Ellora_cave16_001.jpg/800px-Ellora_cave16_001.jpg" alt="Kailasa Temple Ellora">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Ellora, MH</span>
+            <span class="tag-dynasty">Rashtrakuta Dynasty</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Kailasa Temple</h3>
+          <div class="monument-name-hi">कैलाश मन्दिर, एलोरा</div>
+          <div class="monument-meta-row">
+            <span>8th Century CE</span>
+            <span>•</span>
+            <span>Monolithic Rock-Cut</span>
+          </div>
+          <p class="monument-blurb">The world's largest monolithic rock excavation: an entire multi-story Dravidian temple complex carved top-down from a single basalt cliff face.</p>
+          <a href="index.html#kailasa-temple" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 9. Qutub Minar -->
+      <div class="monument-card" data-era="mughal" data-name="Qutub Minar" data-state="Delhi">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Qutub_Minar_in_monsoon.jpg/800px-Qutub_Minar_in_monsoon.jpg" alt="Qutub Minar">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 New Delhi</span>
+            <span class="tag-dynasty">Delhi Sultanate</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Qutub Minar</h3>
+          <div class="monument-name-hi">क़ुतुब मीनार</div>
+          <div class="monument-meta-row">
+            <span>Built 1199–1220 CE</span>
+            <span>•</span>
+            <span>Fluted Minaret</span>
+          </div>
+          <p class="monument-blurb">A 72.5-meter tapering victory tower of red sandstone and marble, carved with delicate Quranic calligraphy and intricate projecting muqarnas balconies.</p>
+          <a href="index.html#qutub-minar" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 10. Golden Temple -->
+      <div class="monument-card" data-era="rajput" data-name="Golden Temple Harmandir Sahib" data-state="Punjab">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/The_Golden_Temple_of_Amritsar_7.jpg/800px-The_Golden_Temple_of_Amritsar_7.jpg" alt="Golden Temple Amritsar">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Amritsar, Punjab</span>
+            <span class="tag-dynasty">Sikh Empire</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Harmandir Sahib</h3>
+          <div class="monument-name-hi">स्वर्ण मन्दिर (हरिमन्दिर साहिब)</div>
+          <div class="monument-meta-row">
+            <span>Founded 1581 CE</span>
+            <span>•</span>
+            <span>Sikh Sacred Shrine</span>
+          </div>
+          <p class="monument-blurb">Gilded central sanctum rising from the sacred Amrit Sarovar, featuring entrances on all four sides signifying universal equality and welcoming of all humankind.</p>
+          <a href="index.html#golden-temple" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 11. Statue of Unity (Modern) -->
+      <div class="monument-card" data-era="modern" data-name="Statue of Unity" data-state="Gujarat">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Statue_of_Unity.jpg/800px-Statue_of_Unity.jpg" alt="Statue of Unity">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Kevadia, Gujarat</span>
+            <span class="tag-dynasty">Modern Era</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Statue of Unity</h3>
+          <div class="monument-name-hi">स्टैच्यू ऑफ यूनिटी</div>
+          <div class="monument-meta-row">
+            <span>Inaugurated 2018 CE</span>
+            <span>•</span>
+            <span>World's Tallest (182m)</span>
+          </div>
+          <p class="monument-blurb">Engineered along the Narmada River honoring Sardar Vallabhbhai Patel; a masterwork of modern civil engineering standing 182 meters tall with brass cladding.</p>
+          <a href="index.html#statue-of-unity" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+      <!-- 12. Gateway of India (Modern/Colonial) -->
+      <div class="monument-card" data-era="modern" data-name="Gateway of India" data-state="Maharashtra">
+        <div class="monument-thumb-wrap">
+          <img class="monument-thumb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Gateway_of_India_March_2017.jpg/800px-Gateway_of_India_March_2017.jpg" alt="Gateway of India">
+          <div class="card-top-tags">
+            <span class="tag-state">📍 Mumbai, MH</span>
+            <span class="tag-dynasty">Indo-Saracenic</span>
+          </div>
+        </div>
+        <div class="monument-card-body">
+          <h3 class="monument-name-en">Gateway of India</h3>
+          <div class="monument-name-hi">गेटवे ऑफ़ इंडिया</div>
+          <div class="monument-meta-row">
+            <span>Erected 1924 CE</span>
+            <span>•</span>
+            <span>Yellow Basalt Arch</span>
+          </div>
+          <p class="monument-blurb">Architect George Wittet's triumphal arch combining 16th-century Gujarati architectural ornamentation with European civic grandeur along Mumbai harbour.</p>
+          <a href="index.html#gateway-of-india" class="btn-card-3d">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Explore in 3D
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- Editorial Footer -->
+<footer class="page-footer">
+  <div class="arch-frame">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>pastIQ</h4>
+        <p>A computational initiative preserving and visualizing 5,000 years of Indian monumental heritage through WebGL procedural 3D, spatial cartography, and artificial epigraphy intelligence.</p>
+        <p style="margin-top:12px; font-size:0.8rem; color:var(--sandstone);">Built with pride for <strong>Blithchron '27 · IIT Gandhinagar</strong></p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Platform Navigation</h5>
+        <ul class="footer-links">
+          <li><a href="home.html">Editorial Gallery</a></li>
+          <li><a href="index.html">101 3D Monuments</a></li>
+          <li><a href="index.html#map">Geospatial Heritage Map</a></li>
+          <li><a href="#eras">Dynasty Curations</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Heritage Lineages</h5>
+        <ul class="footer-links">
+          <li><a href="javascript:void(0)" onclick="filterEra('ancient')">Mauryan & Ancient</a></li>
+          <li><a href="javascript:void(0)" onclick="filterEra('southern')">Chola & Vijayanagara</a></li>
+          <li><a href="javascript:void(0)" onclick="filterEra('rajput')">Solanki & Rajput</a></li>
+          <li><a href="javascript:void(0)" onclick="filterEra('mughal')">Indo-Islamic & Mughal</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2026 pastIQ Initiative. Procedural 3D Code licensed under MIT.</div>
+      <div>Curated for Indian Heritage Preservation &bull; IIT Gandhinagar</div>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+  import { translateTextWithGroq } from './js/groq-agent.js';
+
+  // Filter by Era
+  const eraButtons = document.querySelectorAll('.era-tab-btn');
+  const cards = document.querySelectorAll('.monument-card');
+  const searchInput = document.getElementById('monumentSearch');
+
+  function filterEra(selectedEra) {
+    eraButtons.forEach(btn => {
+      if (btn.dataset.era === selectedEra) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    applyFilters();
+  }
+
+  window.filterEra = filterEra;
+
+  eraButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      eraButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener('input', () => {
+    applyFilters();
+  });
+
+  function applyFilters() {
+    const activeEra = document.querySelector('.era-tab-btn.active').dataset.era;
+    const query = searchInput.value.toLowerCase().trim();
+
+    cards.forEach(card => {
+      const cardEra = card.dataset.era;
+      const cardName = (card.dataset.name || '').toLowerCase();
+      const cardState = (card.dataset.state || '').toLowerCase();
+      const cardText = card.textContent.toLowerCase();
+
+      const matchesEra = (activeEra === 'all') || (cardEra === activeEra);
+      const matchesSearch = !query || cardName.includes(query) || cardState.includes(query) || cardText.includes(query);
+
+      if (matchesEra && matchesSearch) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Home Page Multilingual Translation with Groq LPU
+  const homeLangSelect = document.getElementById('homeLangSelect');
+  const headlineEl = document.querySelector('.hero-headline');
+  const originalHeadline = headlineEl.innerHTML;
+  const descEl = document.querySelector('.hero-description');
+  const originalDesc = descEl.textContent;
+
+  homeLangSelect.addEventListener('change', async (e) => {
+    const lang = e.target.value;
+    if (lang === 'en') {
+      headlineEl.innerHTML = originalHeadline;
+      descEl.textContent = originalDesc;
+      return;
+    }
+
+    try {
+      descEl.textContent = 'Translating with Groq LPU...';
+      const transDesc = await translateTextWithGroq(originalDesc, lang);
+      descEl.textContent = transDesc;
+    } catch (err) {
+      console.warn('Translation error on home:', err);
+      descEl.textContent = originalDesc;
+    }
+  });
+</script>
+</body>
+</html>

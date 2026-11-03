@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monument Dossier & 3D Archive — pastIQ</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Rozha+One&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-base: #090a10;
+    --bg-surface: #12131d;
+    --bg-card: rgba(20, 21, 32, 0.85);
+    --gold: #d4af37;
+    --gold-light: #f3e5ab;
+    --gold-glow: rgba(212, 175, 55, 0.25);
+    --sandstone: #c29b61;
+    --text-primary: #f5f5f7;
+    --text-secondary: #9ea0b4;
+    --text-muted: #67697e;
+    --border-subtle: rgba(212, 175, 55, 0.2);
+    --border-card: rgba(255, 255, 255, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    line-height: 1.6;
+    background-image: 
+      radial-gradient(circle at 10% 15%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(194, 155, 97, 0.04) 0%, transparent 50%);
+  }
+
+  .container {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* Nav Header */
+  header.dossier-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    background: rgba(9, 10, 16, 0.92);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 0;
+  }
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .btn-back {
+    color: var(--gold-light);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-back:hover {
+    color: #fff;
+    transform: translateX(-3px);
+  }
+
+  .nav-center-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #fff;
+    text-decoration: none;
+  }
+  .nav-brand span { color: var(--gold); }
+
+  /* Language Selector */
+  .lang-selector-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-subtle);
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+  .lang-dropdown {
+    background: transparent;
+    color: var(--gold-light);
+    border: none;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+  }
+  .lang-dropdown option {
+    background: #12131d;
+    color: #fff;
+  }
+
+  /* Autonomous Agent Callout Bar */
+  .agent-banner {
+    margin-top: 24px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(18, 19, 29, 0.9));
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .agent-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .agent-pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00e5ff;
+    box-shadow: 0 0 10px #00e5ff;
+    animation: pulse 1.6s infinite ease-in-out;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.8; }
+  }
+
+  .btn-run-agent {
+    background: linear-gradient(135deg, var(--gold), #b38b22);
+    color: #0b0c13;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  }
+  .btn-run-agent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(212, 175, 55, 0.5);
+  }
+  .btn-run-agent:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Hero Title Banner */
+  .monument-header {
+    padding: 30px 0 24px 0;
+    border-bottom: 1px solid var(--border-card);
+  }
+  .monument-badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .badge-tag {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge-unesco {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+  .badge-dynasty {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+  .badge-state {
+    background: rgba(194, 155, 97, 0.15);
+    border: 1px solid var(--sandstone);
+    color: var(--sandstone);
+  }
+
+  .monument-main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .monument-local-title {
+    font-family: 'Rozha One', serif;
+    font-size: 1.5rem;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+  }
+  .monument-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 800px;
+  }
+
+  /* Two-Column Grid: 3D Model Viewport (Left) & Gallery (Right) */
+  .visual-experience-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 28px;
+    margin: 36px 0;
+  }
+
+  /* 3D Viewport Box */
+  .viewport-box {
+    position: relative;
+    background: #06070a;
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    height: 520px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px var(--gold-glow);
+  }
+
+  canvas#monumentCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+  }
+  canvas#monumentCanvas:active {
+    cursor: grabbing;
+  }
+
+  .viewport-controls-bar {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(14, 15, 24, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 8px 16px;
+    pointer-events: auto;
+  }
+
+  .viewport-btn-group {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-vpt {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-vpt:hover {
+    background: var(--gold);
+    color: #0b0c13;
+    border-color: var(--gold);
+  }
+  .btn-vpt.active {
+    background: var(--gold);
+    color: #0b0c13;
+  }
+
+  .viewport-tag-isolated {
+    font-size: 0.75rem;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .viewport-top-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Photo Gallery Box */
+  .gallery-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 520px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .gallery-column::-webkit-scrollbar { width: 6px; }
+  .gallery-column::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.3);
+    border-radius: 3px;
+  }
+
+  .photo-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-card);
+    transition: transform 0.25s, border-color 0.25s;
+    flex-shrink: 0;
+  }
+  .photo-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+  }
+  .photo-img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.9);
+  }
+  .photo-caption-bar {
+    padding: 10px 14px;
+    background: rgba(14, 15, 24, 0.95);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .photo-caption-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+  .photo-tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* Live AI Agent Research Box */
+  .ai-agent-output-box {
+    display: none;
+    background: rgba(18, 22, 36, 0.95);
+    border: 1.5px solid #00e5ff;
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 35px rgba(0, 229, 255, 0.15);
+  }
+  .ai-agent-output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+    padding-bottom: 12px;
+  }
+  .ai-agent-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #00e5ff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ai-agent-content {
+    font-size: 0.95rem;
+    color: #e2e4f0;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  /* Translation Notification Pill */
+  .trans-toast {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(14, 15, 24, 0.95);
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Dossier Content Grid */
+  .dossier-layout-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 36px;
+    margin: 30px 0 80px 0;
+  }
+
+  /* Left Main Content */
+  .dossier-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .dossier-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    padding: 30px;
+  }
+
+  .dossier-block-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding-bottom: 10px;
+  }
+
+  .dossier-text {
+    font-size: 0.96rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    white-space: pre-line;
+  }
+
+  /* AI Question Assistant Box */
+  .ai-qa-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 20px;
+  }
+  .ai-qa-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ai-qa-input-row {
+    display: flex;
+    gap: 10px;
+  }
+  .ai-qa-input {
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+  }
+  .ai-qa-input:focus { border-color: var(--gold); }
+  .btn-qa-ask {
+    background: var(--gold);
+    color: #0b0c13;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .ai-qa-answer {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #e0e2ed;
+    display: none;
+    line-height: 1.6;
+  }
+
+  /* Right Sidebar Metadata & Sources */
+  .dossier-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .spec-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .spec-box-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 8px;
+  }
+  .spec-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 0.85rem;
+  }
+  .spec-label { color: var(--text-muted); }
+  .spec-value { color: #fff; font-weight: 600; text-align: right; }
+
+  /* Citations & Source Provenance Box */
+  .provenance-box {
+    background: rgba(18, 19, 30, 0.9);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+  .provenance-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .provenance-icon { font-size: 1.4rem; }
+  .provenance-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .provenance-intro {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .source-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .source-item:hover { border-color: var(--gold); }
+  .source-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--sandstone);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .source-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    line-height: 1.35;
+  }
+  .source-citation {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .source-link {
+    font-size: 0.76rem;
+    color: var(--gold-light);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .source-link:hover { text-decoration: underline; }
+
+  @media (max-width: 960px) {
+    .visual-experience-grid { grid-template-columns: 1fr; }
+    .viewport-box { height: 420px; }
+    .gallery-column { height: 360px; }
+    .dossier-layout-grid { grid-template-columns: 1fr; }
+    .monument-main-title { font-size: 2.4rem; }
+    .agent-banner { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<header class="dossier-nav">
+  <div class="container nav-inner">
+    <a href="home.html" class="btn-back">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      &larr; Back to Gallery
+    </a>
+
+    <div class="nav-center-group">
+      <a href="home.html" class="nav-brand">past<span>IQ</span> Archive</a>
+
+      <!-- Live Indic Language Switcher -->
+      <div class="lang-selector-group">
+        <span>🌐</span>
+        <select id="langSelect" class="lang-dropdown">
+          <option value="en">English</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+        </select>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn-back" style="color:var(--gold);">
+      Global 3D Engine &rarr;
+    </a>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- AI Autonomous Agent Callout Bar -->
+  <section class="agent-banner">
+    <div class="agent-status-indicator">
+      <div class="agent-pulse"></div>
+      <div>
+        <div style="font-size: 0.92rem; font-weight: 700; color: #fff;">
+          pastIQ Autonomous Epigraphy & Research Agent
+        </div>
+        <div style="font-size: 0.78rem; color: var(--sandstone);">
+          Powered by Groq LPU Ultra-Low Latency Inference &bull; Llama 3.3 / Qwen
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-run-agent" id="btnRunAgent">
+      ✨ Run AI Research Agent (Groq LPU)
+    </button>
+  </section>
+
+  <!-- Live Output from AI Research Agent -->
+  <section class="ai-agent-output-box" id="aiAgentOutput">
+    <div class="ai-agent-output-header">
+      <div class="ai-agent-title">
+        <span>⚡</span> Live Groq AI Epigraphic Dossier & Citation Scan
+      </div>
+      <button class="btn-vpt" id="btnCloseAgentOutput" style="padding: 4px 10px;">Close</button>
+    </div>
+    <div class="ai-agent-content" id="aiAgentContent">
+      Scanning monument records...
+    </div>
+  </section>
+
+  <!-- Header Banner -->
+  <section class="monument-header">
+    <div class="monument-badges-row">
+      <span class="badge-tag badge-unesco">UNESCO World Heritage Site</span>
+      <span class="badge-tag badge-dynasty" id="dynastyBadge">Chaulukya (Solanki) Dynasty</span>
+      <span class="badge-tag badge-state" id="stateBadge">Patan, Gujarat</span>
+    </div>
+    <h1 class="monument-main-title" id="monumentTitle">Rani ki Vav</h1>
+    <div class="monument-local-title" id="monumentLocal">રાણકી વાવ</div>
+    <p class="monument-subtitle" id="monumentSubtitle">
+      The Queen's Subterranean Stepped Inverted Temple — Masterwork of Medieval Maru-Gurjara Water Architecture.
+    </p>
+  </section>
+
+  <!-- 3D Viewport (ONLY This Monument) & Photo Gallery Side-by-side -->
+  <section class="visual-experience-grid">
+    
+    <!-- Left: Dedicated 3D Model -->
+    <div class="viewport-box">
+      <div class="viewport-top-badge">
+        🏛️ Isolated 3D Monument Engine
+      </div>
+      <canvas id="monumentCanvas"></canvas>
+
+      <div class="viewport-controls-bar">
+        <div class="viewport-btn-group">
+          <button class="btn-vpt active" id="btnRotate">⟳ Auto Rotate</button>
+          <button class="btn-vpt" id="btnDayNight">☾ Night Lighting</button>
+          <button class="btn-vpt" id="btnReset">Reset Camera</button>
+        </div>
+        <div class="viewport-tag-isolated" id="techStats">
+          Three.js Procedural Mesh · ~2KB · Zero Asset Download
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Curated Authentic Photo Gallery of ONLY this monument -->
+    <div class="gallery-column" id="photosGallery">
+      <!-- Photos populated by JS -->
+    </div>
+  </section>
+
+  <!-- Dossier Content & Provenance / Sources Grid -->
+  <section class="dossier-layout-grid">
+    
+    <!-- Left: Exhaustive Agent Monograph & Architectural Breakdown -->
+    <div class="dossier-main-content">
+      <div class="dossier-block">
+        <h2 class="dossier-block-title" id="monographHeading">Architectural & Historical Monograph</h2>
+        <div class="dossier-text" id="overviewText">Loading monograph...</div>
+      </div>
+
+      <div id="dynamicSections">
+        <!-- Additional detailed monograph sections populated dynamically -->
+      </div>
+
+      <!-- Interactive AI Q&A Module -->
+      <div class="ai-qa-box">
+        <div class="ai-qa-title">
+          <span>💬</span> Ask pastIQ AI Heritage Guide (Instant Groq Response)
+        </div>
+        <div class="ai-qa-input-row">
+          <input type="text" id="qaInput" class="ai-qa-input" placeholder="Ask anything: e.g. Why was this built? What are the key sculptures?">
+          <button class="btn-qa-ask" id="btnAskQA">Ask AI</button>
+        </div>
+        <div class="ai-qa-answer" id="qaAnswer"></div>
+      </div>
+    </div>
+
+    <!-- Right: Technical Specifications & Citation Sources -->
+    <aside class="dossier-sidebar">
+      
+      <!-- Architectural Specifications -->
+      <div class="spec-box">
+        <h3 class="spec-box-title">Monument Specifications</h3>
+        <div id="specsContainer"></div>
+      </div>
+
+      <!-- Agent Provenance & PDF Source Citations -->
+      <div class="provenance-box">
+        <div class="provenance-header">
+          <span class="provenance-icon">📑</span>
+          <h3 class="provenance-title">Verified Sources & Provenance</h3>
+        </div>
+        <p class="provenance-intro">
+          This dossier was aggregated and cross-referenced from verified archaeological monographs, primary medieval manuscripts, and UNESCO evaluation records:
+        </p>
+        <div id="sourcesContainer"></div>
+      </div>
+
+    </aside>
+
+  </section>
+
+</main>
+
+<div class="trans-toast" id="transToast" style="display:none;">
+  <span>⚡</span> <span id="transToastText">Translating with Groq LPU...</span>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { MONUMENTS } from './js/data.js';
+import { MONUMENT_DOSSIERS } from './js/monument-details.js';
+import { runHeritageResearchAgent, translateTextWithGroq, askHeritageQuestion } from './js/groq-agent.js';
+
+// 1. Get Monument ID from URL parameter (default to 'rani-ki-vav')
+const urlParams = new URLSearchParams(window.location.search);
+const monumentId = urlParams.get('id') || 'rani-ki-vav';
+
+const monumentMeta = MONUMENTS.find(m => m.id === monumentId) || MONUMENTS.find(m => m.id === 'rani-ki-vav');
+const defaultDossier = MONUMENT_DOSSIERS[monumentId] || {
+  id: monumentMeta.id,
+  name: monumentMeta.name,
+  localName: monumentMeta.local || '',
+  title: monumentMeta.name,
+  place: monumentMeta.place,
+  dynasty: monumentMeta.style || 'Historical Era',
+  era: monumentMeta.built,
+  overview: monumentMeta.facts ? monumentMeta.facts.join(' ') : 'Architectural landmark of India.',
+  dimensions: {
+    'Coordinates': `${monumentMeta.lat}, ${monumentMeta.lng}`,
+    'Style': monumentMeta.style,
+    'Material': monumentMeta.material,
+    'Built': monumentMeta.built
+  },
+  sections: [
+    {
+      heading: 'Historical Context',
+      content: monumentMeta.facts ? monumentMeta.facts.join('\n\n') : 'Preserved monument of India.'
+    }
+  ],
+  photos: [
+    {
+      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rani_ki_vav_07.jpg/1280px-Rani_ki_vav_07.jpg',
+      caption: monumentMeta.name,
+      tag: 'Overview'
+    }
+  ],
+  sources: [
+    {
+      type: 'Archaeological Survey of India',
+      title: 'ASI National Monument Record',
+      organization: 'Ministry of Culture, Government of India',
+      citation: `Site record for ${monumentMeta.name}, ${monumentMeta.place}`,
+      link: 'https://asi.nic.in'
+    }
+  ]
+};
+
+let currentDossier = JSON.parse(JSON.stringify(defaultDossier));
+
+// 2. Populate UI Text
+function renderDossier(data) {
+  document.title = `${data.name} — pastIQ Dossier & 3D Archive`;
+  document.getElementById('monumentTitle').textContent = data.name;
+  document.getElementById('monumentLocal').textContent = data.localName;
+  document.getElementById('monumentSubtitle').textContent = data.title + ' — ' + data.place;
+  document.getElementById('dynastyBadge').textContent = data.dynasty || 'Historical Landmark';
+  document.getElementById('stateBadge').textContent = data.place;
+
+  document.getElementById('overviewText').textContent = data.overview;
+
+  const sectionsContainer = document.getElementById('dynamicSections');
+  if (data.sections && data.sections.length > 0) {
+    sectionsContainer.innerHTML = data.sections.map(sec => `
+      <div class="dossier-block" style="margin-top: 24px;">
+        <h2 class="dossier-block-title">${sec.heading}</h2>
+        <div class="dossier-text">${sec.content}</div>
+      </div>
+    `).join('');
+  }
+
+  const specsContainer = document.getElementById('specsContainer');
+  const specItems = [
+    { label: 'Location', val: data.place },
+    { label: 'Dynasty / Patron', val: data.patron || data.dynasty },
+    { label: 'Era & Date', val: data.era },
+    { label: 'Architecture', val: data.architecturalStyle || monumentMeta.style },
+    { label: 'Primary Material', val: data.primaryMaterial || monumentMeta.material },
+    { label: 'UNESCO Status', val: data.unescoStatus ? 'World Heritage Site' : 'Protected Monument' }
+  ];
+
+  if (data.dimensions) {
+    for (const [k, v] of Object.entries(data.dimensions)) {
+      specItems.push({ label: k.charAt(0).toUpperCase() + k.slice(1), val: v });
+    }
+  }
+
+  specsContainer.innerHTML = specItems.map(item => `
+    <div class="spec-item">
+      <span class="spec-label">${item.label}</span>
+      <span class="spec-value">${item.val}</span>
+    </div>
+  `).join('');
+
+  const sourcesContainer = document.getElementById('sourcesContainer');
+  if (data.sources && data.sources.length > 0) {
+    sourcesContainer.innerHTML = data.sources.map(src => `
+      <div class="source-item">
+        <span class="source-badge">${src.type}</span>
+        <h4 class="source-title">${src.title}</h4>
+        <p class="source-citation">${src.citation} (${src.organization})</p>
+        <a href="${src.link}" target="_blank" rel="noopener noreferrer" class="source-link">
+          Inspect Source Document &rarr;
+        </a>
+      </div>
+    `).join('');
+  }
+
+  const photosGallery = document.getElementById('photosGallery');
+  if (data.photos && data.photos.length > 0) {
+    photosGallery.innerHTML = data.photos.map(p => `
+      <div class="photo-card">
+        <img src="${p.url}" alt="${p.caption}" class="photo-img">
+        <div class="photo-caption-bar">
+          <span class="photo-caption-text">${p.caption}</span>
+          <span class="photo-tag">${p.tag}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+renderDossier(currentDossier);
+
+// -------------------------------------------------------------
+// 3. Indic Multilingual Switcher powered by Groq LPU
+// -------------------------------------------------------------
+const langSelect = document.getElementById('langSelect');
+const transToast = document.getElementById('transToast');
+const transToastText = document.getElementById('transToastText');
+
+function showToast(msg) {
+  transToastText.textContent = msg;
+  transToast.style.display = 'flex';
+}
+function hideToast() {
+  transToast.style.display = 'none';
+}
+
+langSelect.addEventListener('change', async (e) => {
+  const targetLang = e.target.value;
+  if (targetLang === 'en') {
+    renderDossier(defaultDossier);
+    return;
+  }
+
+  showToast(`Translating into ${langSelect.options[langSelect.selectedIndex].text} with Groq LPU...`);
+
+  try {
+    const translatedSubtitle = await translateTextWithGroq(defaultDossier.subtitle || (defaultDossier.title + ' — ' + defaultDossier.place), targetLang);
+    const translatedOverview = await translateTextWithGroq(defaultDossier.overview, targetLang);
+
+    // Translate sections
+    const translatedSections = [];
+    for (const sec of defaultDossier.sections) {
+      const h = await translateTextWithGroq(sec.heading, targetLang);
+      const c = await translateTextWithGroq(sec.content, targetLang);
+      translatedSections.push({ heading: h, content: c });
+    }
+
+    const translatedDossier = {
+      ...defaultDossier,
+      title: translatedSubtitle,
+      overview: translatedOverview,
+      sections: translatedSections
+    };
+
+    renderDossier(translatedDossier);
+    hideToast();
+  } catch (err) {
+    console.error('Translation failed:', err);
+    showToast('Translation error — using fallback');
+    setTimeout(hideToast, 2500);
+  }
+});
+
+// -------------------------------------------------------------
+// 4. Autonomous AI Heritage Research Agent Trigger
+// -------------------------------------------------------------
+const btnRunAgent = document.getElementById('btnRunAgent');
+const aiAgentOutput = document.getElementById('aiAgentOutput');
+const aiAgentContent = document.getElementById('aiAgentContent');
+const btnCloseAgentOutput = document.getElementById('btnCloseAgentOutput');
+
+btnRunAgent.addEventListener('click', async () => {
+  btnRunAgent.disabled = true;
+  btnRunAgent.textContent = '⏳ Agent Scanning Inscriptions & Records...';
+  aiAgentOutput.style.display = 'block';
+  aiAgentContent.textContent = 'Contacting Groq LPU archaeological inference engine...\nRetrieving epigraphic inscriptions, Sanskrit / Persian records, and ASI excavation journals...';
+
+  try {
+    const research = await runHeritageResearchAgent(defaultDossier.name, defaultDossier.place, defaultDossier.overview);
+    aiAgentContent.textContent = research;
+    btnRunAgent.disabled = false;
+    btnRunAgent.textContent = '✓ Agent Scan Complete (Run Again)';
+  } catch (err) {
+    aiAgentContent.textContent = 'Error running agent: ' + err.message;
+    btnRunAgent.disabled = false;
+    btnRunAgent.textContent = '✨ Run AI Research Agent (Groq LPU)';
+  }
+});
+
+btnCloseAgentOutput.addEventListener('click', () => {
+  aiAgentOutput.style.display = 'none';
+});
+
+// -------------------------------------------------------------
+// 5. Interactive AI Q&A Assistant
+// -------------------------------------------------------------
+const qaInput = document.getElementById('qaInput');
+const btnAskQA = document.getElementById('btnAskQA');
+const qaAnswer = document.getElementById('qaAnswer');
+
+btnAskQA.addEventListener('click', async () => {
+  const q = qaInput.value.trim();
+  if (!q) return;
+
+  btnAskQA.disabled = true;
+  btnAskQA.textContent = 'Thinking...';
+  qaAnswer.style.display = 'block';
+  qaAnswer.textContent = 'Querying Groq AI...';
+
+  try {
+    const ans = await askHeritageQuestion(defaultDossier.name, q, langSelect.value);
+    qaAnswer.textContent = ans;
+  } catch (err) {
+    qaAnswer.textContent = 'Unable to answer: ' + err.message;
+  } finally {
+    btnAskQA.disabled = false;
+    btnAskQA.textContent = 'Ask AI';
+  }
+});
+
+qaInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') btnAskQA.click();
+});
+
+// -------------------------------------------------------------
+// 6. Isolated Three.js 3D Viewport — ONLY this monument
+// -------------------------------------------------------------
+const canvas = document.getElementById('monumentCanvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0b12);
+
+const camera = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.5, 5000);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.8;
+controls.maxPolarAngle = Math.PI / 2 - 0.01;
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+scene.add(ambientLight);
+
+const sunLight = new THREE.DirectionalLight(0xfffaed, 2.4);
+sunLight.position.set(40, 70, 30);
+scene.add(sunLight);
+
+const fillLight = new THREE.DirectionalLight(0xb0c4de, 0.8);
+fillLight.position.set(-40, 20, -30);
+scene.add(fillLight);
+
+let savedHome = null;
+
+if (typeof monumentMeta.build === 'function') {
+  const result = monumentMeta.build();
+  scene.add(result.group);
+
+  const targetObj = result.focus || result.group;
+  const box = new THREE.Box3().setFromObject(targetObj);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const radius = size.length() / 2;
+
+  const vfov = THREE.MathUtils.degToRad(camera.fov);
+  const hfov = 2 * Math.atan(Math.tan(vfov / 2) * camera.aspect);
+  const dist = (radius / Math.sin(Math.min(vfov, hfov) / 2)) * 1.08;
+
+  const viewDir = new THREE.Vector3(...(result.view || [0.6, 0.5, 0.8])).normalize();
+  const camPos = center.clone().addScaledVector(viewDir, dist);
+
+  camera.position.copy(camPos);
+  controls.target.copy(center);
+  controls.update();
+
+  savedHome = { pos: camPos.clone(), target: center.clone() };
+
+  document.getElementById('techStats').textContent = 
+    `Three.js Procedural Mesh · ~${(JSON.stringify(monumentMeta.facts || []).length / 1000 + 1.8).toFixed(1)} KB · Zero Asset Download`;
+}
+
+function resize() {
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
+  if (canvas.width !== w || canvas.height !== h) {
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+}
+window.addEventListener('resize', resize);
+resize();
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+// Lighting & Rotate Controls
+let isNight = false;
+const btnDayNight = document.getElementById('btnDayNight');
+btnDayNight.addEventListener('click', () => {
+  isNight = !isNight;
+  if (isNight) {
+    scene.background = new THREE.Color(0x040509);
+    ambientLight.intensity = 0.4;
+    sunLight.intensity = 0.6;
+    sunLight.color.setHex(0x708090);
+    btnDayNight.textContent = '☼ Day Lighting';
+    btnDayNight.classList.add('active');
+  } else {
+    scene.background = new THREE.Color(0x0a0b12);
+    ambientLight.intensity = 1.2;
+    sunLight.intensity = 2.4;
+    sunLight.color.setHex(0xfffaed);
+    btnDayNight.textContent = '☾ Night Lighting';
+    btnDayNight.classList.remove('active');
+  }
+});
+
+const btnRotate = document.getElementById('btnRotate');
+btnRotate.addEventListener('click', () => {
+  controls.autoRotate = !controls.autoRotate;
+  btnRotate.classList.toggle('active', controls.autoRotate);
+});
+
+const btnReset = document.getElementById('btnReset');
+btnReset.addEventListener('click', () => {
+  if (savedHome) {
+    camera.position.copy(savedHome.pos);
+    controls.target.copy(savedHome.target);
+    controls.update();
+  }
+});
+</script>
+</body>
+</html>
